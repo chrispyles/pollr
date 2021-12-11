@@ -1,5 +1,23 @@
 .option {
-  input {
-    width: 100%;
+  .inputRow {
+    display: flex;
+
+    input {
+      width: 100%;
+      margin-right: 3px;
+    }
+
+    .icon svg {
+      width: 30px;
+      padding: 5px 3px 0 3px;
+    }
+
+    .clearIcon svg {
+      color: red;
+    }
+
+    .dragIcon svg {
+      color: blue;
+    }
   }
 }

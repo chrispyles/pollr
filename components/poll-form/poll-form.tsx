@@ -1,9 +1,11 @@
-import { Component, } from 'react';
+import { Component } from 'react';
 
 import Option from './option';
 import Question from './question';
 
 import utilStyles from '../../styles/utils.module.scss';
+
+import styles from './poll-form.module.scss';
 
 
 type PollFormState = {
@@ -51,7 +53,7 @@ export default class PollForm extends Component<{}, PollFormState> {
   render() {
     const { questionText, options } = this.state;
     return (
-      <form onSubmit={this.createPoll}>
+      <form onSubmit={this.createPoll} className={styles.pollForm}>
         <h3>Question</h3>
         <Question text={questionText} onChange={this.onChangeQuestionText} />
 
