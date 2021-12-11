@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+
 import Option from './option';
 import Question from './question';
 
@@ -22,6 +24,7 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.onChangeQuestionText = this.onChangeQuestionText.bind(this);
     this.onAddOption = this.onAddOption.bind(this);
     this.onChangeOptionText = this.onChangeOptionText.bind(this);
+    this.onOptionReorder = this.onOptionReorder.bind(this);
     this.createPoll = this.createPoll.bind(this);
 
     this.state = {
@@ -46,6 +49,20 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.setState({ options });
   }
 
+  onOptionReorder(result) {
+    if (!result.destination || (result.source.droppableId === result.destination.droppableId 
+        && result.source.index === result.destination.index))
+    {
+      return;
+    }
+
+    const options = [...this.state.options];
+    const [ draggedItem ] = options.splice(result.source.index, 1);
+    options.splice(result.destination.index, 0, draggedItem);
+
+    this.setState({ options });
+    };
+
   createPoll(evt) {
     console.log(evt.target);
   }
@@ -58,15 +75,23 @@ export default class PollForm extends Component<{}, PollFormState> {
         <Question text={questionText} onChange={this.onChangeQuestionText} />
 
         <h3><label htmlFor="options">Options:</label></h3>
-        <ul>
-          {options.map((o, i) => (
-            <Option
-              key={`option-${i}`}
-              text={o} 
-              onChange={(evt) => this.onChangeOptionText(i, evt)}
-            />
-          ))}
-        </ul>
+        <DragDropContext onDragEnd={this.onOptionReorder}>
+          <Droppable droppableId="options">
+            {(provided) => (
+              <ul className="options" {...provided.droppableProps} ref={provided.innerRef}>
+                {options.map((o, i) => (
+                  <Option
+                    key={`option-${i}`}
+                    text={o} 
+                    onChange={(evt) => this.onChangeOptionText(i, evt)}
+                    index={i}
+                  />
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
 
         <p className={utilStyles.alignRight}><a onClick={this.onAddOption}>Add option</a></p>
         <button type="submit">Submit</button>
