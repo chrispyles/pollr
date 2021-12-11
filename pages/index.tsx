@@ -1,25 +1,14 @@
-import Head from 'next/head';
-
 import { ReactElement } from 'react';
 
-import Layout, { siteTitle } from '../components/layout';
-
-import utilStyles from '../styles/utils.module.scss';
+import Layout from '../components/layout';
+import PollForm from '../components/poll-form/poll-form';
 
 
 export default function Home(): ReactElement {
   return (
     <Layout home>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-      <section className={utilStyles.headingMd}>
-        <h1>Hi there</h1>
-        <p>
-          (This is a sample website - you’ll be building a site like this on{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
-      </section>
+      <h1>Create a poll</h1>
+      <PollForm />
     </Layout>
-  )
+  );
 }
