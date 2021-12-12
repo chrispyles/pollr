@@ -28,7 +28,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
       });
     });
-    res.status(200);
+    res.status(200).json({ success: true });
   }
   await prisma.$disconnect();
 };

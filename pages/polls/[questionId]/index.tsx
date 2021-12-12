@@ -6,6 +6,8 @@ import { ReactElement } from 'react';
 
 import Layout from '../../../components/layout';
 
+import Path from '../../../lib/path';
+
 
 const prisma = new PrismaClient();
 
@@ -35,7 +37,7 @@ export default function Poll(props: PollProps): ReactElement {
     }, null, 2);
 
     const res = await fetch(
-      `/api/responses/create`,
+      Path.CREATE_RESPONSE,
       {
         body,
         headers: {

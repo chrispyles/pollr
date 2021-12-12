@@ -2,18 +2,27 @@ import { Component } from 'react';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
+import Path, { makeHref } from '../../lib/path';
+
 import Option from './option';
 import Question from './question';
 
 import utilStyles from '../../styles/utils.module.scss';
 
 import styles from './poll-form.module.scss';
+import Link from 'next/link';
 
 
 type PollFormState = {
   questionText: string;
   options: string[];
-  pollCreated: boolean;
+  questionId: number | null;
+};
+
+
+type PollFormResponse = {
+  success: boolean;
+  questionId: number;
 };
 
 
@@ -27,11 +36,12 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.onChangeOptionText = this.onChangeOptionText.bind(this);
     this.onOptionReorder = this.onOptionReorder.bind(this);
     this.createPoll = this.createPoll.bind(this);
+    this.renderSuccessModal = this.renderSuccessModal.bind(this);
 
     this.state = {
       questionText: '',
       options: Array(4).fill(''),
-      pollCreated: false,
+      questionId: null,
     };
   }
 
@@ -70,46 +80,97 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.setState({ options });
     };
 
-  createPoll(evt) {
+  async createPoll(evt) {
+    evt.preventDefault();
     console.log(evt.target);
+
+    const formData = {
+      questionText: evt.target.questionText.value,
+      isRadio: true, // TODO: implement this
+      options: [...evt.target.options].map(o => o.value),
+    };
+
+    const res = await fetch(
+      Path.CREATE_POLL,
+      {
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+      },
+    )
+
+    if (!res.ok) {
+      alert(await res.text());
+    } else {
+      const { questionId } = await res.json() as PollFormResponse;
+      this.setState({ questionId });
+    }
+  }
+
+  renderSuccessModal() {
+    const { questionId } = this.state;
+    if (questionId === null) {
+      return;
+    }
+
+    return (
+      <div className={styles.successModalContainer}>
+        <div className={styles.successModal}>
+          <h2>Poll created!</h2>
+          <p>Your poll has been created. You can see it{' '}
+            <Link href={makeHref(Path.QUESTION, { questionId })}>
+              <a>here</a>
+            </Link> or view the responses{' '}
+            <Link href={makeHref(Path.ALL_RESPONSES, { questionId })}>
+              <a>here</a>
+            </Link>
+          </p>
+        </div>
+      </div>
+    )
   }
 
   render() {
     const { questionText, options } = this.state;
     return (
-      <form onSubmit={this.createPoll} className={styles.pollForm}>
-        <h3>Question</h3>
-        <Question text={questionText} onChange={this.onChangeQuestionText} />
+      <>
+        <form onSubmit={this.createPoll} className={styles.pollForm}>
+          <h3>Question</h3>
+          <Question text={questionText} onChange={this.onChangeQuestionText} />
 
-        <h3><label htmlFor="options">Options:</label></h3>
-        <DragDropContext onDragEnd={this.onOptionReorder}>
-          <Droppable droppableId="options">
-            {(provided) => (
-              <ul className="options" {...provided.droppableProps} ref={provided.innerRef}>
-                {options.map((o, i) => (
-                  <Option
-                    key={`option-${i}`}
-                    text={o} 
-                    onChange={(evt) => this.onChangeOptionText(i, evt)}
-                    onDelete={() => this.onDeleteOption(i)}
-                    index={i}
-                  />
-                ))}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
+          <h3><label htmlFor="options">Options:</label></h3>
+          <DragDropContext onDragEnd={this.onOptionReorder}>
+            <Droppable droppableId="options">
+              {(provided) => (
+                <ul className="options" {...provided.droppableProps} ref={provided.innerRef}>
+                  {options.map((o, i) => (
+                    <Option
+                      key={`option-${i}`}
+                      text={o} 
+                      onChange={(evt) => this.onChangeOptionText(i, evt)}
+                      onDelete={() => this.onDeleteOption(i)}
+                      index={i}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
 
-        <div className={styles.buttons}>
-          <div>
-            <button type="submit">Submit</button>
+          <div className={styles.buttons}>
+            <div>
+              <button type="submit">Submit</button>
+            </div>
+            <div className={utilStyles.alignRight}>
+              <button type="button" onClick={this.onAddOption}>Add option</button>
+            </div>
           </div>
-          <div className={utilStyles.alignRight}>
-            <button type="button" onClick={this.onAddOption}>Add option</button>
-          </div>
-        </div>
-      </form>
+        </form>
+        {this.renderSuccessModal()}
+      </>
     );
   }
 }

@@ -38,6 +38,7 @@ export default function Option(props: OptionProps): ReactElement {
             />
             <span 
               className={cn(styles.icon, styles.dragIcon)}
+              tabindex="-1"
               {...provided.dragHandleProps}
             >
               <DragIcon />
