@@ -30,6 +30,9 @@ export default function Layout({ children, home }: LayoutProps): ReactElement {
         />
         <meta name="og:title" content={SITE_TITLE} />
         <meta name="twitter:card" content="summary_large_image" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap" rel="stylesheet"></link>
       </Head>
       <main>{children}</main>
       {!home && (

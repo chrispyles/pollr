@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.6.0",
+    "autosize": "^5.0.1",
     "next": "latest",
     "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",

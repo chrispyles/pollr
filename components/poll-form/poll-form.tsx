@@ -23,6 +23,7 @@ export default class PollForm extends Component<{}, PollFormState> {
 
     this.onChangeQuestionText = this.onChangeQuestionText.bind(this);
     this.onAddOption = this.onAddOption.bind(this);
+    this.onDeleteOption = this.onDeleteOption.bind(this);
     this.onChangeOptionText = this.onChangeOptionText.bind(this);
     this.onOptionReorder = this.onOptionReorder.bind(this);
     this.createPoll = this.createPoll.bind(this);
@@ -36,12 +37,18 @@ export default class PollForm extends Component<{}, PollFormState> {
 
   onChangeQuestionText(evt) {
     this.setState({ questionText: evt.target.value });
-  };
+  }
 
   onAddOption(evt) {
     evt.preventDefault();
     this.setState({ options: [ ...this.state.options, '' ]});
-  };
+  }
+
+  onDeleteOption(idx) {
+    const options = [...this.state.options];
+    options.splice(idx, 1);
+    this.setState({ options });
+  }
 
   onChangeOptionText(idx, evt) {
     const options = [...this.state.options];
@@ -84,6 +91,7 @@ export default class PollForm extends Component<{}, PollFormState> {
                     key={`option-${i}`}
                     text={o} 
                     onChange={(evt) => this.onChangeOptionText(i, evt)}
+                    onDelete={() => this.onDeleteOption(i)}
                     index={i}
                   />
                 ))}
@@ -93,8 +101,14 @@ export default class PollForm extends Component<{}, PollFormState> {
           </Droppable>
         </DragDropContext>
 
-        <p className={utilStyles.alignRight}><a onClick={this.onAddOption}>Add option</a></p>
-        <button type="submit">Submit</button>
+        <div className={styles.buttons}>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
+          <div className={utilStyles.alignRight}>
+            <button type="button" onClick={this.onAddOption}>Add option</button>
+          </div>
+        </div>
       </form>
     );
   }

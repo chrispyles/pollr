@@ -1,23 +1,42 @@
+@import '../../styles/borders';
+@import '../../styles/colors';
+
 .option {
+  overflow: auto;
+
   .inputRow {
     display: flex;
 
     input {
       width: 100%;
       margin-right: 3px;
+      @include bottom-border;
     }
 
-    .icon svg {
-      width: 30px;
-      padding: 5px 3px 0 3px;
+    .icon {
+      cursor: pointer;
+
+      svg {
+        width: 35px;
+        height: 30px;
+        padding-top: 5px;
+      }
     }
 
     .clearIcon svg {
-      color: red;
+      color: $red;
     }
 
-    .dragIcon svg {
-      color: blue;
+    .dragIcon {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      svg {
+        color: $blue;
+      }
     }
   }
 }

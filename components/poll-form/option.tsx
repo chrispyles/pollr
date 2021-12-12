@@ -17,12 +17,13 @@ import styles from './option.module.scss';
 type OptionProps = {
   text: string;
   onChange: ChangeEventHandler;
+  onDelete: () => void;
   index: number;
 };
 
 
 export default function Option(props: OptionProps): ReactElement {
-  const { text, onChange, index } = props;
+  const { text, onChange, onDelete, index } = props;
   return (
     <Draggable draggableId={`option-${index}`} index={index}>
       {(provided) => (
@@ -41,7 +42,10 @@ export default function Option(props: OptionProps): ReactElement {
             >
               <DragIcon />
             </span>
-            <span className={cn(styles.icon, styles.clearIcon)}><ClearIcon /></span>
+            <span 
+              className={cn(styles.icon, styles.clearIcon)}
+              onClick={onDelete}
+            ><ClearIcon /></span>
           </div>
           <p className={utilStyles.alignRight}>({text.length} / {MAX_CHARS} characters)</p>
         </li>

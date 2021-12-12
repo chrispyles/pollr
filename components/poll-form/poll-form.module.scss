@@ -1,5 +1,14 @@
 .pollForm {
   ul {
     list-style-type: none;
+    padding: 0;
+  }
+
+  .buttons {
+    display: flex;
+
+    div {
+      width: 100%;
+    }
   }
 }

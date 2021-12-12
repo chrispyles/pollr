@@ -1,0 +1,6 @@
+@import './colors';
+
+@mixin bottom-border {
+  border: none;
+  border-bottom: 3px solid $grey;
+}
