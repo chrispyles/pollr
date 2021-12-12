@@ -4,6 +4,8 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import Path, { makeHref } from '../../lib/path';
 
+import Modal from '../modal';
+
 import Option from './option';
 import Question from './question';
 
@@ -35,13 +37,14 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.onDeleteOption = this.onDeleteOption.bind(this);
     this.onChangeOptionText = this.onChangeOptionText.bind(this);
     this.onOptionReorder = this.onOptionReorder.bind(this);
+    this.onCloseSuccessModal = this.onCloseSuccessModal.bind(this);
     this.createPoll = this.createPoll.bind(this);
     this.renderSuccessModal = this.renderSuccessModal.bind(this);
 
     this.state = {
       questionText: '',
       options: Array(4).fill(''),
-      questionId: null,
+      questionId: 3,
     };
   }
 
@@ -78,11 +81,14 @@ export default class PollForm extends Component<{}, PollFormState> {
     options.splice(result.destination.index, 0, draggedItem);
 
     this.setState({ options });
-    };
+  }
+
+  onCloseSuccessModal() {
+    this.setState({ questionId: null });
+  }
 
   async createPoll(evt) {
     evt.preventDefault();
-    console.log(evt.target);
 
     const formData = {
       questionText: evt.target.questionText.value,
@@ -116,20 +122,18 @@ export default class PollForm extends Component<{}, PollFormState> {
     }
 
     return (
-      <div className={styles.successModalContainer}>
-        <div className={styles.successModal}>
-          <h2>Poll created!</h2>
-          <p>Your poll has been created. You can see it{' '}
-            <Link href={makeHref(Path.QUESTION, { questionId })}>
-              <a>here</a>
-            </Link> or view the responses{' '}
-            <Link href={makeHref(Path.ALL_RESPONSES, { questionId })}>
-              <a>here</a>
-            </Link>
-          </p>
-        </div>
-      </div>
-    )
+      <Modal onClose={this.onCloseSuccessModal}>
+        <h2>Poll created!</h2>
+        <p>Your poll has been created. You can see it{' '}
+          <Link href={makeHref(Path.QUESTION, { questionId })}>
+            <a>here</a>
+          </Link> or view the responses{' '}
+          <Link href={makeHref(Path.ALL_RESPONSES, { questionId })}>
+            <a>here</a>
+          </Link>.
+        </p>
+      </Modal>
+    );
   }
 
   render() {

@@ -4,7 +4,7 @@ const Path = {
   ALL_RESPONSES: '/polls/[questionId]/responses',
   RESPONSE: '/polls/[questionId]/responses/[responseId]',
   CREATE_POLL: '/api/polls/create',
-  CREATE_RESPONSE: 'api/responses/create',
+  CREATE_RESPONSE: '/api/responses/create',
 };
 
 

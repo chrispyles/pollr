@@ -1,15 +1,13 @@
 import { GetServerSideProps } from 'next';
 
-import { PollOption, PollQuestion, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 import { ReactElement } from 'react';
 
 import Layout from '../../../components/layout';
 
+import { fetchQuestionData } from '../../../lib/fetchData';
 import Path from '../../../lib/path';
-
-
-const prisma = new PrismaClient();
 
 
 type PollProps = {
@@ -77,21 +75,14 @@ export default function Poll(props: PollProps): ReactElement {
 };
 
 
-async function fetchPollData(id: number): Promise<{ 
-  question: PollQuestion, 
-  options: PollOption[]
-}> {
-  const question = await prisma.pollQuestion.findUnique({ where: { id }});
-  const options = await prisma.pollOption.findMany({ where: { question } })
-  options.sort((a, b) => a.orderNumber - b.orderNumber)
-  await prisma.$disconnect();
-  return { question, options };
-};
-
-
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const prisma = new PrismaClient();
+
   const questionId = params.questionId as string;
-  const poll = await fetchPollData(parseInt(questionId));
+  const poll = await fetchQuestionData(prisma, parseInt(questionId));
+
+  await prisma.$disconnect();
+
   return {
     props: { 
       id: questionId, 
