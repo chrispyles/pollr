@@ -1,5 +1,10 @@
+import Link from 'next/link';
+
 import React from 'react';
-import Path from '../../lib/path';
+
+import Path, { makeHref } from '../../lib/path';
+
+import Modal from '../modal';
 
 import Option from './option';
 
@@ -33,6 +38,8 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
     
     this.setSelection = this.setSelection.bind(this);
     this.submitResponse = this.submitResponse.bind(this);
+    this.onCloseSuccessModal = this.onCloseSuccessModal.bind(this);
+    this.renderSuccessModal = this.renderSuccessModal.bind(this);
 
     this.state = {
       selectedIndex: null,
@@ -65,6 +72,32 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
     })
   }
 
+  onCloseSuccessModal() {
+    this.setState({ responseId: null, selectedIndex: null });
+  }
+
+  renderSuccessModal() {
+    const { questionId } = this.props;
+    const { responseId } = this.state;
+    if (responseId === null) {
+      return;
+    }
+
+    return (
+      <Modal onClose={this.onCloseSuccessModal}>
+        <h2>Your response has been recorded.</h2>
+        <p>You can see it{' '}
+          <Link href={makeHref(Path.RESPONSE, { questionId, responseId })}>
+            <a>here</a>
+          </Link> or view the other responses{' '}
+          <Link href={makeHref(Path.ALL_RESPONSES, { questionId })}>
+            <a>here</a>
+          </Link>.
+        </p>
+      </Modal>
+    );
+  }
+
   render() {
     const options = this.props.options.map(({ text }, i) => (
       <Option 
@@ -83,6 +116,7 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
         <div className={utilsStyles.buttonGroupCenter}>
           <button onClick={this.submitResponse}>Submit</button>
         </div>
+        {this.renderSuccessModal()}
       </div>
     );
   }

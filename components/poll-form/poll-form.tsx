@@ -44,7 +44,7 @@ export default class PollForm extends Component<{}, PollFormState> {
     this.state = {
       questionText: '',
       options: Array(4).fill(''),
-      questionId: 3,
+      questionId: 1, // TODO: default to null
     };
   }
 
