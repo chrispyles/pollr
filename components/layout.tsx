@@ -53,7 +53,7 @@ export default function Layout({ children, home }: LayoutProps): ReactElement {
           {SITE_TITLE}
         </div>
         <div>
-          <Link href="https://github.com/chrispyles">
+          <Link href="https://github.com/chrispyles/pollr">
             <button><OctocatIcon /> View on GitHub</button>
           </Link>
         </div>
