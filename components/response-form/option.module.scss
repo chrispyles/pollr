@@ -9,12 +9,17 @@
   cursor: pointer;
   margin: 20px 0;
 
-  &:hover {
+  &:hover:not(.disabled) {
     background-color: #DDD;
   }
 
-  &.selected {
+  &.selected,
+  &.selected:hover {
     background-color: $translucent-green;
+  }
+
+  &.disabled {
+    cursor: auto;
   }
 
   p {

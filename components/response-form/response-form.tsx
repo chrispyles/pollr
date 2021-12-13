@@ -18,12 +18,15 @@ type ResponseFormProps = {
     text: string,
     id: string,
   }[];
+  selectedOptionId: string | null;
+  disabled?: boolean;
 };
 
 
 type ResponseFormState = {
   selectedIndex: number | null;
   responseId: number | null;
+  disabled: boolean,
 };
 
 
@@ -41,9 +44,15 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
     this.onCloseSuccessModal = this.onCloseSuccessModal.bind(this);
     this.renderSuccessModal = this.renderSuccessModal.bind(this);
 
+    let selectedIndex;
+    if (this.props.selectedOptionId !== null) {
+      selectedIndex = this.props.options.findIndex(o => o.id === this.props.selectedOptionId);
+    }
+
     this.state = {
-      selectedIndex: null,
+      selectedIndex,
       responseId: null,
+      disabled: this.props.disabled || false,
     };
   }
 
@@ -103,8 +112,9 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
       <Option 
         key={`option-${i}`}
         text={text} 
-        onClick={() => this.setSelection(i)} 
+        onClick={() => this.setSelection(i)}
         selected={this.state.selectedIndex === i} 
+        disabled={this.state.disabled}
       />
     ));
     return (
@@ -113,9 +123,11 @@ export default class ResponseForm extends React.Component<ResponseFormProps, Res
         <div>
           {options}
         </div>
-        <div className={utilsStyles.buttonGroupCenter}>
-          <button onClick={this.submitResponse}>Submit</button>
-        </div>
+        {!this.state.disabled && (
+          <div className={utilsStyles.buttonGroupCenter}>
+            <button onClick={this.submitResponse}>Submit</button>
+          </div>
+        )}
         {this.renderSuccessModal()}
       </div>
     );

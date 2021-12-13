@@ -1,11 +1,12 @@
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 
-import { PollOption, PollQuestion, PollResponse, PollResponseOption, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 import React, { ReactElement } from 'react';
 
 import Layout from '../../../../components/layout';
+import ResponseForm from '../../../../components/response-form/response-form';
 
 import { fetchQuestionData, fetchResponseData } from '../../../../lib/fetchData';
 import Path, { makeHref } from '../../../../lib/path';
@@ -22,6 +23,7 @@ type ResponseProps = {
     createdAt: string;
     options: {  // assumed to be sorted
       text: string,
+      id: string,
       checked: boolean,
     }[],
   };
@@ -34,22 +36,14 @@ export default function Response(props: ResponseProps): ReactElement {
   const { question, response } = props;
   return (
     <Layout>
-      <h1>{question.text}</h1>
       <p>Submitted at {response.createdAt}</p>
-      <form>
-        {response.options.map(({ text, checked }, i) => (
-          <React.Fragment key={`option-${i}`}>
-            <input 
-              type={question.isRadio ? "radio" : "checkbox"} 
-              id={`response-${i}`}
-              checked={checked}
-              disabled
-            />
-            <label htmlFor={`response-${i}`}>{text}</label>
-            <br />
-          </React.Fragment>
-        ))}
-      </form>
+      <ResponseForm
+        questionId={question.id}
+        questionText={question.text}
+        options={response.options}
+        selectedOptionId={response.options.filter(o => o.checked)[0].id}
+        disabled={true}
+      />
       <p><Link href={makeHref(Path.ALL_RESPONSES, { questionId: question.id })}>
         <a>Back to responses</a>
       </Link></p>
@@ -73,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const options = questionData.options
     .slice()
     .sort((o1, o2) => o1.orderNumber - o2.orderNumber)
-    .map(o => ({ text: o.text, checked: checkedOptionIds.includes(o.id) }));
+    .map(o => ({ text: o.text, id: o.id, checked: checkedOptionIds.includes(o.id) }));
 
   return {
     props: { 
