@@ -54,3 +54,17 @@
 .alignRight {
   text-align: right;
 }
+
+@mixin buttonGroup {
+  display: flex;
+}
+
+.buttonGroup {
+  @include buttonGroup;
+}
+
+.buttonGroupCenter {
+  @include buttonGroup;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,0 +1,23 @@
+@import '../../styles/colors';
+
+.option {
+  border-radius: 20px;
+  min-height: 80px;
+  background-color: #EEE;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 20px 0;
+
+  &:hover {
+    background-color: #DDD;
+  }
+
+  &.selected {
+    background-color: $translucent-green;
+  }
+
+  p {
+    padding: 0 20px;
+  }
+}
