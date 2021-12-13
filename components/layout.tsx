@@ -5,6 +5,8 @@ import { ReactElement, ReactNode } from 'react';
 
 import Path from '../lib/path';
 
+import OctocatIcon from './icons/octocat';
+
 import styles from './layout.module.scss';
 
 const SITE_TITLE = 'Pollr';
@@ -36,22 +38,26 @@ export default function Layout({ children, home }: LayoutProps): ReactElement {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&display=swap" rel="stylesheet"></link>
       </Head>
-      <header className={styles.header}>
-        <nav>
-          <div><strong>Pollr</strong></div>
-          <div className={styles.quiet}><Link href={Path.HOME}><a>Create a poll</a></Link></div>
-        </nav>
-      </header>
-      <div className={styles.container}>
-        <main>{children}</main>
-        {!home && (
-          <div className={styles.backToHome}>
-            <Link href="/">
-              <a>← Back to home</a>
-            </Link>
-          </div>
-        )}
+      <div className={styles.outerContainer}>
+        <div className={styles.container}>
+          <main>{children}</main>
+        </div>
       </div>
+      <footer className={styles.footer}>
+        <div>
+          <Link href={Path.HOME}>
+            <button>Create a poll</button>
+          </Link>
+        </div>
+        <div className={styles.siteName}>
+          {SITE_TITLE}
+        </div>
+        <div>
+          <Link href="https://github.com/chrispyles">
+            <button><OctocatIcon /> View on GitHub</button>
+          </Link>
+        </div>
+      </footer>
     </div>
   )
 }
