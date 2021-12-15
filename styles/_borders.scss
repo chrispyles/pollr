@@ -3,4 +3,9 @@
 @mixin bottom-border {
   border: none;
   border-bottom: 3px solid $grey;
+
+  &:focus {
+    outline: none;
+    border-color: $dark-grey;
+  }
 }

@@ -45,12 +45,14 @@ button {
   letter-spacing: 1px;
   color: #FFF;
   cursor: pointer;
-  background-color: $green;
+  background-color: $black;
   padding: 15px;
-  border: 1px solid $green;
+  border: 1px solid $black;
 
-  &:hover {
-    color: $green;
+  &:hover,
+  &:focus {
+    outline: none;
+    color: $black;
     background-color: #FFF;
   }
 }
