@@ -2,7 +2,7 @@ import cn from 'classnames';
 
 import { ChangeEventHandler, ReactElement } from 'react';
 
-import { Draggable, resetServerContext } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 
 import { MAX_CHARS } from '../../constants/creation-form';
 
@@ -27,7 +27,7 @@ export default function Option(props: OptionProps): ReactElement {
   return (
     <Draggable draggableId={`option-${index}`} index={index}>
       {(provided) => (
-        <li className={styles.option} ref={provided.innerRef} {...provided.draggableProps}>
+        <li key={`option-${index}`} className={styles.option} ref={provided.innerRef} {...provided.draggableProps}>
           <div className={styles.inputRow}>
             <input 
               type="text"
@@ -54,6 +54,3 @@ export default function Option(props: OptionProps): ReactElement {
     </Draggable>
   )
 }
-
-
-resetServerContext();
